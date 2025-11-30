@@ -10,11 +10,13 @@ const selectedProduct = ref({});
 
 function openAddForm() {
   selectedProduct.value = {
+    id: null,
     name: '',
     unitPrice: 0,
     quantity: 0,
-    expirationDate: '',
-    category: ''
+    expirationDate: null, // ✅ corregido
+    category: '',
+    deleted: false
   };
   isEdit.value = false;
   showForm.value = true;
@@ -53,24 +55,30 @@ store.fetchProducts();
     <table class="products-table">
       <thead>
       <tr>
+        <th>ID</th>
         <th>Nombre</th>
         <th>Precio Unitario</th>
         <th>Cantidad</th>
+        <th>Precio Total</th> <!-- ✅ agregado -->
         <th>Vencimiento</th>
         <th>Categoría</th>
+        <th>Eliminado</th> <!-- ✅ agregado -->
         <th>Acciones</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="product in store.products" :key="product.idProduct">
+      <tr v-for="product in store.products" :key="product.id">
+        <td>{{ product.id }}</td>
         <td>{{ product.name }}</td>
         <td>{{ product.unitPrice }}</td>
         <td>{{ product.quantity }}</td>
+        <td>{{ product.totalPrice }}</td> <!-- ✅ -->
         <td>{{ product.expirationDate }}</td>
         <td>{{ product.category }}</td>
+        <td>{{ product.deleted ? 'Sí' : 'No' }}</td> <!-- ✅ -->
         <td>
           <button @click="openEditForm(product)" class="edit-button">Editar</button>
-          <button @click="handleDelete(product.idProduct)" class="delete-button">Eliminar</button>
+          <button @click="handleDelete(product.id)" class="delete-button">Eliminar</button>
         </td>
       </tr>
       </tbody>

@@ -2,8 +2,24 @@
   "inventory": {
     "title": "Inventory Management",
     "viewItems": "View Items",
+    "viewDishes": "View Dishes",
     "viewProducts": "View Products"
   },
+  "dishes": {
+    "title": "Finished Dishes",
+    "total": "Total Dishes",
+    "add": "Add Dish",
+    "edit": "Edit Dish",
+    "name": "Name",
+    "ingredients": "Ingredients",
+    "noDishes": "No dishes found.",
+    "addDish": "Add Dish",
+    "actions": "Actions",
+    "delete": "Delete",
+    "loading": "Loading dishes...",
+    "errorLoading": "Error loading dishes"
+  },
+
   "option": {
     "home": "Home",
     "sales": "Sales",

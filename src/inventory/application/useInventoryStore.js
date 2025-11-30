@@ -1,136 +1,112 @@
-// src/Inventory/application/useInventoryStore.js
-
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
-import { ItemService } from "./item.service.js";
+import { ref, computed } from "vue";
 import { ProductService } from "./product.service.js";
-import { Item } from "../domain/model/item.entity.js";
-import Product from '../domain/model/product.entity.js';
+import { DishService } from "./dish.service.js";
 
-const itemService = new ItemService();
+const dishService = new DishService();
 const productService = new ProductService();
 
 export const useInventoryStore = defineStore('inventory', () => {
-    // --- STATE ---
-    const items = ref([]);
+    const dishes = ref([]);
     const products = ref([]);
     const errors = ref([]);
-    const itemsLoaded = ref(false);
+    const dishesLoaded = ref(false);
     const productsLoaded = ref(false);
 
-    // --- GETTERS ---
-    const itemsCount = computed(() => items.value.length);
+    const dishesCount = computed(() => dishes.value.length);
     const productsCount = computed(() => products.value.length);
 
-    // --- ACTIONS (Item) ---
-    async function fetchItems() {
-        if (itemsLoaded.value) return;
+    // Dishes
+    async function fetchDishes() {
+        if (dishesLoaded.value) return;
         try {
-            const fetchedItems = await itemService.getItems();
-            items.value = fetchedItems;
-            itemsLoaded.value = true;
-        } catch (error) {
-            console.error("Store Error in fetchItems:", error);
-            errors.value.push(error);
+            const fetched = await dishService.getDishes();
+            dishes.value = fetched;
+            dishesLoaded.value = true;
+        } catch (e) {
+            errors.value.push(e);
         }
     }
-    async function addItem(itemEntity) {
+    async function addDish(dishEntity) {
         try {
-            const newEntity = await itemService.createItem(itemEntity);
-            items.value.push(newEntity);
-        } catch (error) {
-            console.error("Store Error in addItem:", error);
-            errors.value.push(error);
-            throw error;
+            const newDish = await dishService.createDish(dishEntity);
+            dishes.value.push(newDish);
+            return newDish;
+        } catch (e) {
+            errors.value.push(e);
+            throw e;
         }
     }
-    async function deleteItem(id) {
+    async function updateDish(dishEntity) {
         try {
-            await itemService.deleteItem(id);
-            const index = items.value.findIndex(i => i.id === id);
-            if (index !== -1) items.value.splice(index, 1);
-        } catch (error) {
-            console.error("Store Error in deleteItem:", error);
-            errors.value.push(error);
+            const updated = await dishService.updateDish(dishEntity);
+            const idx = dishes.value.findIndex(d => d.id === updated.id);
+            if (idx !== -1) dishes.value[idx] = updated;
+            return updated;
+        } catch (e) {
+            errors.value.push(e);
+            throw e;
         }
     }
-    async function updateItem(itemEntity) {
+    async function deleteDish(id) {
         try {
-            const updatedEntity = await itemService.updateItem(itemEntity);
-            const index = items.value.findIndex(i => i.id === updatedEntity.id);
-            if (index !== -1) items.value[index] = updatedEntity;
-        } catch (error) {
-            console.error("Store Error in updateItem:", error);
-            errors.value.push(error);
-            throw error;
+            await dishService.deleteDish(id);
+            const idx = dishes.value.findIndex(d => d.id === id);
+            if (idx !== -1) dishes.value.splice(idx, 1);
+        } catch (e) {
+            errors.value.push(e);
+            throw e;
         }
     }
 
-    // --- ACTIONS (Product) ---
+    // Products
     async function fetchProducts() {
         if (productsLoaded.value) return;
         try {
-            const fetchedProducts = await productService.getProducts();
-            products.value = fetchedProducts;
+            const fetched = await productService.getProducts();
+            products.value = fetched;
             productsLoaded.value = true;
-        } catch (error) {
-            console.error("Store Error in fetchProducts:", error);
-            errors.value.push(error);
+        } catch (e) {
+            errors.value.push(e);
         }
     }
     async function addProduct(productEntity) {
         try {
-            const newEntity = await productService.createProduct(productEntity);
-            products.value.push(newEntity);
-        } catch (error) {
-            console.error("Store Error in addProduct:", error);
-            errors.value.push(error);
-            throw error;
+            const created = await productService.createProduct(productEntity);
+            products.value.push(created);
+            return created;
+        } catch (e) {
+            errors.value.push(e);
+            throw e;
+        }
+    }
+    async function updateProduct(productEntity) {
+        try {
+            const updated = await productService.updateProduct(productEntity);
+            const idx = products.value.findIndex(p => p.id === updated.id);
+            if (idx !== -1) products.value[idx] = updated;
+            return updated;
+        } catch (e) {
+            errors.value.push(e);
+            throw e;
         }
     }
     async function deleteProduct(id) {
         try {
             await productService.deleteProduct(id);
-            const index = products.value.findIndex(p => p.idProduct === id);
-            if (index !== -1) products.value.splice(index, 1);
-        } catch (error) {
-            console.error("Store Error in deleteProduct:", error);
-            errors.value.push(error);
-        }
-    }
-    async function updateProduct(productEntity) {
-        try {
-            const updatedEntity = await productService.updateProduct(productEntity);
-            const index = products.value.findIndex(p => p.idProduct === updatedEntity.idProduct);
-            if (index !== -1) products.value[index] = updatedEntity;
-        } catch (error) {
-            console.error("Store Error in updateProduct:", error);
-            errors.value.push(error);
-            throw error;
+            const idx = products.value.findIndex(p => p.id == id);
+            if (idx !== -1) products.value.splice(idx, 1);
+        } catch (e) {
+            errors.value.push(e);
+            throw e;
         }
     }
 
-    // --- RETURN ---
     return {
-        // State
-        items,
-        products,
-        errors,
-        itemsLoaded,
-        productsLoaded,
-
-        // Getters
-        itemsCount,
-        productsCount,
-
-        // Actions
-        fetchItems,
-        addItem,
-        updateItem,
-        deleteItem,
-        fetchProducts,
-        addProduct,
-        updateProduct,
-        deleteProduct,
-    }
+        dishes, products, errors,
+        dishesLoaded, productsLoaded,
+        dishesCount, productsCount,
+        fetchDishes, addDish, updateDish, deleteDish,
+        fetchProducts, addProduct, updateProduct, deleteProduct
+    };
 });

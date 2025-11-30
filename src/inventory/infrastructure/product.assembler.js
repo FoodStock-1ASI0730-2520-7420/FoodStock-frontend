@@ -1,68 +1,51 @@
-// src/inventory/infrastructure/product.assembler.js
 import Product from '../domain/model/product.entity.js';
 
-
-/**
- * Assembler para convertir recursos API a entidades Product.
- * @class
- */
 export class ProductAssembler {
-    /**
-     * Convierte un DTO de la API a una entidad Product.
-     * @param {Object} resource - El objeto recurso que representa un producto.
-     * @returns {Product} La entidad Product correspondiente.
-     */
-    static toDomain(resource) {
+    static toDomain(resource = {}) {
         const domainData = {
-            idProduct: resource.idProduct || resource.id,
-            name: resource.name,
-            unitPrice: resource.unitPrice,
-            totalPrice: resource.totalPrice,
-            quantity: resource.quantity,
-            expirationDate: resource.expirationDate,
-            category: resource.category,
+            id: resource?.id ?? resource?._id ?? null,
+            name: resource?.name ?? '',
+            unitPrice: resource?.unitPrice ?? 0,
+            totalPrice: resource?.totalPrice ?? (resource?.unitPrice ?? 0) * (resource?.quantity ?? 0),
+            quantity: resource?.quantity ?? 0,
+            expirationDate: resource?.expirationDate ?? null,
+            category: resource?.category ?? '',
+            deleted: resource?.deleted ?? false,
         };
         return new Product(domainData);
     }
 
-    /**
-     * Convierte una respuesta de la API en un array de entidades Product.
-     * @param {import('axios').AxiosResponse} response - La respuesta de la API con datos de productos.
-     * @returns {Product[]} Array de entidades Product.
-     */
     static toDomainList(response) {
-        if (response.status !== 200) {
-            console.error(`Error ${response.status}: ${response.statusText} al obtener la lista de productos.`);
-            return [];
-        }
+        let resources = null;
 
-        let resources = Array.isArray(response.data) ? response.data : response.data.products;
-
-        if (!resources) {
-            console.warn("La estructura de datos de la respuesta API no contiene 'products' o no es un array.");
+        if (Array.isArray(response)) {
+            resources = response;
+        } else if (response && Array.isArray(response.data)) {
+            resources = response.data;
+        } else if (response && Array.isArray(response.data?.products)) {
+            resources = response.data.products;
+        } else if (response && Array.isArray(response.products)) {
+            resources = response.products;
+        } else {
+            console.warn("ProductAssembler: respuesta API sin lista de productos reconocible.");
             return [];
         }
 
         return resources.map(resource => ProductAssembler.toDomain(resource));
     }
 
-    /**
-     * Convierte una entidad Product a un DTO listo para enviar a la API.
-     * @param {Product} productEntity - La entidad de dominio.
-     * @returns {object} El objeto DTO.
-     */
     static toResource(productEntity) {
         const resource = {
             name: productEntity.name,
             unitPrice: productEntity.unitPrice,
-            totalPrice: productEntity.totalPrice,
             quantity: productEntity.quantity,
             expirationDate: productEntity.expirationDate,
             category: productEntity.category,
+            deleted: productEntity.deleted ?? false,
         };
 
-        if (productEntity.idProduct !== null) {
-            resource.idProduct = productEntity.idProduct;
+        if (productEntity.id !== null && productEntity.id !== undefined) {
+            resource.id = productEntity.id;
         }
 
         return resource;

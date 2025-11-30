@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory, RouterView} from "vue-router";
 import Home from "./shared/presentation/views/home.vue";
 import InventoryView from './inventory/presentation/views/InventoryView.vue';
-import ItemsView from './inventory/presentation/views/ItemsView.vue';
+import DishesView from './inventory/presentation/views/DishesView.vue';
 import ProductsView from './inventory/presentation/views/ProductsView.vue';
 import SuppliersView from './suppliers/presentation/views/suppliersView.vue';
 import salesRoutes from "./sales/presentation/sale-routes.js";
@@ -23,20 +23,10 @@ const routes = [
     {
         path: '/inventory',
         component: InventoryView,
-        meta: { title: 'Inventory' },
         children: [
-            {
-                path: 'items',
-                name: 'ItemsManagement',
-                component: ItemsView,
-                meta: { title: 'Manage Items' }
-            },
-            {
-                path: 'products',
-                name: 'ProductsManagement',
-                component: ProductsView,
-                meta: { title: 'Manage Products' }
-            }
+            { path: 'dishes', name: 'InventoryDishes', component: DishesView },
+            { path: 'products', name: 'InventoryProducts', component: ProductsView },
+            { path: '', redirect: { name: 'InventoryDishes' } }
         ]
     },
     {
@@ -52,9 +42,9 @@ const routes = [
     }
 ];
 
-const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: routes,
+export const router = createRouter({
+    history: createWebHistory(),
+    routes
 
 });
 

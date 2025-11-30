@@ -1,18 +1,39 @@
 <script setup>
 import { ref, watch, defineProps, defineEmits } from 'vue';
-import {Select as PvSelect} from "primevue";
+import Select from "primevue/select"; // ✅ corregido import
 
 const props = defineProps({
   product: { type: Object, required: true },
   isEdit: { type: Boolean, default: false }
 });
 
-const categories = [{ label: 'Fruta', value: 'Fruta' }, { label: 'Verdura', value: 'Verdura' }, { label: 'Especias', value: 'Especias' },{ label: 'Proteinas', value: 'Proteinas' },{ label: 'Lacteos', value: 'Lacteos' }];
+const categories = [
+  { label: 'Fruta', value: 'Fruta' },
+  { label: 'Verdura', value: 'Verdura' },
+  { label: 'Especias', value: 'Especias' },
+  { label: 'Proteinas', value: 'Proteinas' },
+  { label: 'Lacteos', value: 'Lacteos' }
+];
+
 const emit = defineEmits(['submit', 'close']);
-const localProduct = ref({});
+const localProduct = ref({
+  id: null,
+  name: '',
+  unitPrice: 0,
+  quantity: 0,
+  expirationDate: null,
+  category: ''
+});
 
 watch(() => props.product, (newProduct) => {
-  localProduct.value = JSON.parse(JSON.stringify(newProduct));
+  localProduct.value = JSON.parse(JSON.stringify(newProduct || {
+    id: null,
+    name: '',
+    unitPrice: 0,
+    quantity: 0,
+    expirationDate: null,
+    category: ''
+  }));
 }, { immediate: true, deep: true });
 
 function handleSubmit() {
@@ -42,8 +63,12 @@ function handleSubmit() {
       </div>
       <div class="form-field">
         <label for="category">Categoría</label>
-        <pv-select id="category" v-model="localProduct.category" :options="categories" option-label="label" option-value="value" placeholder="select category"></pv-select>
-
+        <Select id="category"
+                v-model="localProduct.category"
+                :options="categories"
+                option-label="label"
+                option-value="value"
+                placeholder="Selecciona categoría" />
       </div>
       <div class="form-actions">
         <button type="button" @click="$emit('close')" class="cancel-button">Cancelar</button>

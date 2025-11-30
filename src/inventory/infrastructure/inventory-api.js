@@ -1,127 +1,80 @@
-// src/inventory/infrastructure/inventory-api.js
-
 import { BaseApi2 } from "../../shared/infrastructure/base-api-2.js";
-
 import { BaseEndpoint2 } from "../../shared/infrastructure/base-endpoint-2.js";
-import { ItemAssembler } from './item.assembler';
-import { ProductAssembler } from './product.assembler';
+import { ProductAssembler } from './product.assembler.js';
+import { DishAssembler } from './dish.assembler.js';
 
-const itemsEndpointPath = import.meta.env.VITE_ITEMS_ENDPOINT_PATH || 'items';
 const productsEndpointPath = import.meta.env.VITE_PRODUCTS_ENDPOINT_PATH || 'products';
+const dishesEndpointPath = import.meta.env.VITE_DISHES_ENDPOINT_PATH || 'dishes';
 
 export class InventoryApi extends BaseApi2 {
-    #itemsEndpoint;
     #productsEndpoint;
+    #dishesEndpoint;
 
     constructor() {
         super();
-        this.#itemsEndpoint = new BaseEndpoint2(this, itemsEndpointPath);
         this.#productsEndpoint = new BaseEndpoint2(this, productsEndpointPath);
+        this.#dishesEndpoint = new BaseEndpoint2(this, dishesEndpointPath);
     }
 
-    // --- Métodos para Item ---
-
-    /**
-     * Obtiene todos los ítems.
-     * @returns {Promise<Item[]>}
-     */
-    async getItems() {
-        const response = await this.#itemsEndpoint.getAll();
-        return ItemAssembler.toDomainList(response);
-    }
-
-    /**
-     * Obtiene un ítem por su ID.
-     * @param {number|string} id
-     * @returns {Promise<Item>}
-     */
-    async getItemById(id) {
-        const response = await this.#itemsEndpoint.getById(id);
-        return ItemAssembler.toDomain(response.data);
-    }
-
-    /**
-     * Crea un nuevo ítem.
-     * @param {Item} itemEntity
-     * @returns {Promise<Item>}
-     */
-    async createItem(itemEntity) {
-        const resource = ItemAssembler.toResource(itemEntity);
-        const response = await this.#itemsEndpoint.create(resource);
-        return ItemAssembler.toDomain(response.data);
-    }
-
-    /**
-     * Actualiza un ítem existente.
-     * @param {Item} itemEntity
-     * @returns {Promise<Item>}
-     */
-    async updateItem(itemEntity) {
-        if (!itemEntity.idItem) throw new Error("Item ID is required for update.");
-        const resource = ItemAssembler.toResource(itemEntity);
-        const response = await this.#itemsEndpoint.update(itemEntity.idItem, resource);
-        return ItemAssembler.toDomain(response.data);
-    }
-
-    /**
-     * Elimina un ítem por su ID.
-     * @param {number|string} id
-     * @returns {Promise<import('axios').AxiosResponse>}
-     */
-    deleteItem(id) {
-        return this.#itemsEndpoint.delete(id);
-    }
-
-    // --- Métodos para Product ---
-
-    /**
-     * Obtiene todos los productos.
-     * @returns {Promise<Product[]>}
-     */
+    // Products
     async getProducts() {
         const response = await this.#productsEndpoint.getAll();
         return ProductAssembler.toDomainList(response);
     }
 
-    /**
-     * Obtiene un producto por su ID.
-     * @param {number|string} id
-     * @returns {Promise<Product>}
-     */
     async getProductById(id) {
         const response = await this.#productsEndpoint.getById(id);
         return ProductAssembler.toDomain(response.data);
     }
 
-    /**
-     * Crea un nuevo producto.
-     * @param {Product} productEntity
-     * @returns {Promise<Product>}
-     */
     async createProduct(productEntity) {
         const resource = ProductAssembler.toResource(productEntity);
         const response = await this.#productsEndpoint.create(resource);
         return ProductAssembler.toDomain(response.data);
     }
 
-    /**
-     * Actualiza un producto existente.
-     * @param {Product} productEntity
-     * @returns {Promise<Product>}
-     */
     async updateProduct(productEntity) {
-        if (!productEntity.idProduct) throw new Error("Product ID is required for update.");
+        if (!productEntity.id) throw new Error("Product ID is required for update."); // ✅ corregido
         const resource = ProductAssembler.toResource(productEntity);
-        const response = await this.#productsEndpoint.update(productEntity.idProduct, resource);
+        const response = await this.#productsEndpoint.update(productEntity.id, resource);
         return ProductAssembler.toDomain(response.data);
     }
 
-    /**
-     * Elimina un producto por su ID.
-     * @param {number|string} id
-     * @returns {Promise<import('axios').AxiosResponse>}
-     */
     deleteProduct(id) {
         return this.#productsEndpoint.delete(id);
+    }
+
+    async consumeProduct(id, resource) {
+        if (!id) throw new Error("Product ID is required for consume.");
+        const response = await this.#productsEndpoint.update(`${id}/consume`, resource); // ✅ usa endpoint /consume
+        return ProductAssembler.toDomain(response.data);
+    }
+
+    // Dishes
+    async getDishes() {
+        const response = await this.#dishesEndpoint.getAll();
+        return DishAssembler.toDomainList(response);
+    }
+
+    async getDishById(id) {
+        const response = await this.#dishesEndpoint.getById(id);
+        return DishAssembler.toDomain(response.data);
+    }
+
+    async createDish(dishEntity) {
+        const resource = DishAssembler.toResource(dishEntity);
+        const response = await this.#dishesEndpoint.create(resource);
+        return DishAssembler.toDomain(response.data);
+    }
+
+    async updateDish(dishEntity) {
+        if (!dishEntity.id) throw new Error("Dish ID is required for update.");
+        const resource = DishAssembler.toResource(dishEntity);
+        const response = await this.#dishesEndpoint.update(dishEntity.id, resource);
+        return DishAssembler.toDomain(response.data);
+    }
+
+    deleteDish(id) {
+        return this.#dishesEndpoint.delete(id);
     }
 }

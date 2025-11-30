@@ -2,8 +2,24 @@
   "inventory": {
     "title": "Gestión de Inventario",
     "viewItems": "Ver Ítems",
-    "viewProducts": "Ver Productos"
+    "viewProducts": "Ver Productos",
+    "viewDishes": "Ver Platos"
   },
+  "dishes": {
+    "title": "Platos Terminados",
+    "total": "Total de Platos",
+    "add": "Agregar Plato",
+    "edit": "Editar Plato",
+    "name": "Nombre",
+    "ingredients": "Ingredientes",
+    "noDishes": "No hay platos.",
+    "addDish": "Agregar Plato",
+    "actions": "Acciones",
+    "delete": "Eliminar",
+    "loading": "Cargando platos...",
+    "errorLoading": "Error al cargar platos"
+  },
+
   "option": {
     "home": "Inicio",
     "inventory": "Inventario",
