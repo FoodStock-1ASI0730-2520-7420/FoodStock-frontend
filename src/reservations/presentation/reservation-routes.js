@@ -11,4 +11,10 @@ export const reservationRoutes = [
         name: 'ReservationNew',
         component: () => import('./view/reservation-form.vue'),
     },
+    {
+        path: '/reservations/table/new',
+        name: 'TableNew',
+        component: () => import('./view/table-form.vue')
+    }
+
 ];

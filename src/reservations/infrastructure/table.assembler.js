@@ -1,10 +1,20 @@
-
 // path: src/reservations/infrastructure/table.assembler.js
-const toInt = (v, def = 0) => {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : def;
-};
-export function tableFromDto(dto = {}) {
-    const { number, capacity, ...rest } = dto;
-    return { ...rest, number: toInt(number, null), capacity: toInt(capacity, 0) };
+import { Table } from "../domain/model/table.entity.js";
+
+export function toEntity(dto = {}) {
+    return new Table({
+        id: dto.id ?? null,
+        number: dto.number,
+        capacity: dto.capacity
+    });
+}
+
+export function toDTO(entity = {}) {
+    // no envíes id si no existe (POST)
+    const out = {
+        number: entity.number,
+        capacity: entity.capacity
+    };
+    if (entity.id != null) out.id = entity.id;
+    return out;
 }

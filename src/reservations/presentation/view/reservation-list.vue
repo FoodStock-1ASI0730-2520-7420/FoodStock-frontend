@@ -4,7 +4,13 @@
     <header class="rs-header">
       <h1>Reservaciones</h1>
       <div class="header-actions">
-        <router-link class="rs-btn primary" to="/reservations/new">+ Nueva</router-link>
+        <router-link class="rs-btn primary" to="/reservations/new">
+          + Reservación
+        </router-link>
+
+        <router-link class="rs-btn" style="margin-left:10px;" to="/reservations/table/new">
+          + Mesa
+        </router-link>
       </div>
     </header>
 
@@ -101,7 +107,7 @@
             <button
                 class="rs-btn xs"
                 @click="cancel(r)"
-                :disabled="r.status === 'canceled' || r.status === 'completed'"
+                :disabled="r.status === 'canceled' || computeStatus(r) === 'completed'"
             >Cancelar</button>
             <button class="rs-btn xs danger" @click="del(r)">Eliminar</button>
           </td>
@@ -120,6 +126,7 @@
 <script setup>
 import { ref, computed, onMounted, h, onBeforeUnmount } from 'vue';
 import { reservationsStore } from '../../application/reservations.store.js';
+import { tablesStore } from '../../application/tables.store.js'; // ← FIX: importar tablesStore
 import ReservationTables from './reservation-tables.vue';
 
 const store = reservationsStore;
@@ -173,22 +180,22 @@ const Countdown = {
   render() { return h('span', this.label); },
 };
 
-/* disponibilidad actual */
+/* disponibilidad actual en tablero */
 const availableNow = computed(() => {
   const date = filters.value.date || today;
   const time = filters.value.time || '19:00';
   return tables.value
       .filter((t) =>
+          // opcional: incluir capacidad si lo deseas -> && t.capacity >= 2
           store.isTableAvailable({
             date,
             time,
             tableNumber: t.number,
             durationMinutes: store.state.filters.durationMinutes,
-          }),
+          })
       )
       .map((t) => t.number);
 });
-
 
 function toMinutes(hhmm) {
   const [h, m] = (hhmm || '00:00').split(':').map(Number);
@@ -225,7 +232,8 @@ const filtered = computed(() => {
 async function cancel(r) {
   if (!confirm('¿Cancelar esta reservación?')) return;
   try {
-    await store.cancelReservation(r.idReservation ?? r.id);
+    // FIX: cancelReservation no existe
+    await store.updateReservation(r.idReservation ?? r.id, { status: 'canceled' });
     await loadAll();
   } catch (e) {
     alert(e?.message || 'Error al cancelar');
@@ -242,9 +250,9 @@ async function del(r) {
 }
 
 async function loadAll() {
-  await store.loadAll();
+  await store.loadAll(); // carga reservas y tablesStore
   reservations.value = [...store.state.reservations];
-  tables.value = [...store.state.tables];
+  tables.value = [...tablesStore.state.tables]; // ← FIX: mesas desde tablesStore
 }
 onMounted(async () => { await loadAll(); });
 

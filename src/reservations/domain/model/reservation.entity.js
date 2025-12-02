@@ -4,14 +4,13 @@ export class Reservation {
         this.idReservation = props.idReservation ?? props.id ?? null;
         this.tableNumber = Number(props.tableNumber);
         this.quantityPeople = Number(props.quantityPeople);
-        this.reservationDate = props.reservationDate ?? null; // YYYY-MM-DD
-        this.reservationTime = props.reservationTime ?? null; // HH:mm
+        this.reservationDate = props.reservationDate ?? null;
+        this.reservationTime = props.reservationTime ?? null;
         this.creationDate = props.creationDate ?? null;
         this.creationTime = props.creationTime ?? null;
         this.durationMinutes = Number(props.durationMinutes ?? 120);
-        this.status = props.status ?? 'scheduled';
-        this.customerName = props.customerName ?? '';
-        this.customerPhone = props.customerPhone ?? '';
-
+        this.status = props.status ?? "scheduled";
+        this.customerName = props.customerName ?? "";
+        this.customerPhone = props.customerPhone ?? "";
     }
 }

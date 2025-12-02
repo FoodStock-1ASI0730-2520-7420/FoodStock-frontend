@@ -1,4 +1,4 @@
-
+<!-- path: src/reservations/presentation/view/reservation-form.vue -->
 <template>
   <div class="rs-container">
     <header class="rs-header">
@@ -52,8 +52,8 @@
                 type="number"
                 min="1"
                 v-model="form.quantityPeople"
-            required
-            @input="refresh"
+                required
+                @input="refresh"
             />
           </label>
           <label>
@@ -63,7 +63,7 @@
                 min="30"
                 step="15"
                 v-model="form.durationMinutes"
-            @input="refresh"
+                @input="refresh"
             />
           </label>
         </div>
@@ -103,6 +103,7 @@
 <script setup>
 import { onMounted, reactive, ref, computed } from "vue";
 import { reservationsStore } from "../../application/reservations.store.js";
+import { tablesStore } from "../../application/tables.store.js"; // <- FIX
 import ReservationTables from "./reservation-tables.vue";
 
 const store = reservationsStore;
@@ -144,15 +145,20 @@ const isValid = computed(() =>
     safePeople.value > 0 && safeDuration.value >= 30
 );
 
-/* Disponibilidad */
+/* Disponibilidad: reemplaza store.availableTables(...) inexistente */
 const availableTableNumbers = computed(() => {
   if (!form.reservationDate || !form.reservationTime || safePeople.value === 0 || safeDuration.value === 0) return [];
-  return store.availableTables({
-    date: form.reservationDate,
-    time: form.reservationTime,
-    quantityPeople: safePeople.value,
-    durationMinutes: safeDuration.value,
-  }).map(t => t.number);
+  return tables.value
+      .filter(t =>
+          t.capacity >= safePeople.value &&
+          store.isTableAvailable({
+            date: form.reservationDate,
+            time: form.reservationTime,
+            tableNumber: t.number,
+            durationMinutes: safeDuration.value,
+          })
+      )
+      .map(t => t.number);
 });
 
 /* Sync selección */
@@ -200,8 +206,8 @@ async function submit() {
 /* Load */
 const isTimeExpanded = ref(false);
 onMounted(async () => {
-  await store.loadAll();
-  tables.value = store.state.tables;
+  await store.loadAll(); // carga reservas + mesas (via tablesStore)
+  tables.value = tablesStore.state.tables; // <- FIX: leer del tablesStore
 });
 
 /* Dropdown */

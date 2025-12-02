@@ -1,3 +1,4 @@
+<!-- path: src/reservations/presentation/view/reservation-tables.vue -->
 <template>
   <div class="board">
     <div
@@ -57,6 +58,7 @@
 <script setup>
 import { computed, reactive, onBeforeUnmount } from 'vue';
 import { reservationsStore } from '../../application/reservations.store.js';
+
 const store = reservationsStore;
 
 const props = defineProps({
