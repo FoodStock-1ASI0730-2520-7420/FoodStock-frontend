@@ -63,7 +63,8 @@ export default {
   },
   methods: {
     selectPlanOption(plan) {
-      this.selectedPlan = plan;
+      // Guarda directamente el nombre del plan
+      this.selectedPlan = plan; // "Básico" o "Pro"
     },
     async confirmPayment() {
       this.error = "";

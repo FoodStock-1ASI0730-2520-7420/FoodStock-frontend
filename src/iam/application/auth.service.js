@@ -1,5 +1,5 @@
 // src/iam/application/auth.service.js
-const API = "http://localhost:3001";
+const API = "http://localhost:3000";
 
 // Registro de usuario → guarda en db.json
 export async function registerUser(form) {
@@ -13,6 +13,8 @@ export async function registerUser(form) {
             return { ok: false, message: "No se pudo registrar." };
         }
         const user = await res.json();
+        localStorage.setItem("authToken", "fake-token");
+        localStorage.setItem("userId", user.id);
         return { ok: true, user };
     } catch (err) {
         return { ok: false, message: "Error de conexión con el servidor." };

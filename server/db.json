@@ -59,6 +59,56 @@
       "segment": "microempresas",
       "profilePicture": null,
       "plan": null
+    },
+    {
+      "id": "7cb5",
+      "name": "gonzalo",
+      "email": "gonza@gonzalo.com",
+      "password": "123",
+      "phone": "123456789",
+      "segment": "microempresas",
+      "profilePicture": null,
+      "plan": null
+    },
+    {
+      "id": "c58b",
+      "name": "a",
+      "email": "a@a.com",
+      "password": "1234",
+      "phone": "2146498416",
+      "segment": "microempresas",
+      "profilePicture": null,
+      "plan": null
+    },
+    {
+      "id": "6a15",
+      "name": "Hola",
+      "email": "hola@gmail.com",
+      "password": "123",
+      "phone": "123456789",
+      "segment": "microempresas",
+      "profilePicture": null,
+      "plan": null
+    },
+    {
+      "id": "81ec",
+      "name": "dasda",
+      "email": "dasdasd",
+      "password": "dasdas",
+      "phone": "adasd",
+      "segment": "emprendedor",
+      "profilePicture": null,
+      "plan": null
+    },
+    {
+      "id": "2c49",
+      "name": "dsadasd",
+      "email": "dasdasd",
+      "password": "asdasdad",
+      "phone": "asdasdasd",
+      "segment": "microempresas",
+      "profilePicture": null,
+      "plan": "Estándar"
     }
   ],
   "sales": [],

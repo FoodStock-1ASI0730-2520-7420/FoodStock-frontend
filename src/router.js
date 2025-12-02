@@ -111,7 +111,7 @@ router.beforeEach((to, from, next) => {
 
     // Autenticación
     const token = localStorage.getItem("authToken");
-    const publicPages = ["/login", "/register", "/choose-plan"];
+    const publicPages = ["/login", "/register"];
 
     if (to.meta?.requiresAuth && !token) return next("/login");
     if (token && publicPages.includes(to.path)) return next("/home");
