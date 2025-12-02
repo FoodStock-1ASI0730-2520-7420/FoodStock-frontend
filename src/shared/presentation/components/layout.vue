@@ -1,51 +1,63 @@
 <script setup>
-
 import LanguageSwitcher from "./language-switcher.vue";
-import {ref} from "vue";
-import {useI18n} from "vue-i18n";
 import FooterContent from "./footer-content.vue";
+import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
+
 const { t } = useI18n();
+const route = useRoute();
 
 const drawer = ref(false);
 const toggleDrawer = () => {
   drawer.value = !drawer.value;
-}
+};
+
+// Navegación principal
 const items = [
-  {label: 'option.home', to: '/home'},
-  {label: 'option.inventory', to: '/inventory/dishes'},
-  {label: 'option.sales', to: '/sales/list'},
-  {label: 'option.suppliers', to: '/suppliers'},
+  { label: "option.home", to: "/home" },
+  { label: "option.inventory", to: "/inventory/dishes" },
+  { label: "option.sales", to: "/sales/list" },
+  { label: "option.suppliers", to: "/suppliers" },
   { label: "option.reservation", to: "/reservations" },
-  { label: 'option.reports', to: '/reports' }
+  { label: "option.reports", to: "/reports" }
 ];
+
+// Rutas públicas (IAM)
+const publicRoutes = ["/login", "/register", "/choose-plan"];
+const isPublicRoute = computed(() => publicRoutes.includes(route.path));
 </script>
 
 <template>
-  <div class="header">
-    <pv-toolbar class="bg-primary">
-      <template #start>
-        <pv-button class="p-button-text" icon="pi pi-bars" @click="toggleDrawer"/>
-        <h3>FoodStock</h3>
-      </template>
-      <template #center>
+  <div>
+    <!-- Header solo si no es ruta pública -->
+    <div v-if="!isPublicRoute" class="header">
+      <pv-toolbar class="bg-primary">
+        <template #start>
+          <pv-button class="p-button-text" icon="pi pi-bars" @click="toggleDrawer" />
+          <h3>FoodStock</h3>
+        </template>
+        <template #end>
+          <div class="flex-column mr-3">
+            <pv-button v-for="item in items" :key="item.label" as-child v-slot="slotProps">
+              <router-link :to="item.to" :class="slotProps['class']">{{ t(item.label) }}</router-link>
+            </pv-button>
+          </div>
+          <language-switcher />
+        </template>
+      </pv-toolbar>
+      <pv-drawer v-model:visible="drawer" />
+    </div>
 
-      </template>
-      <template #end>
-        <div class="flex-column mr-3">
-          <pv-button v-for="item in items" :key="item.label" as-child v-slot="slotProps">
-            <router-link :to="item.to" :class="slotProps['class']">{{ t(item.label) }}</router-link>
-          </pv-button>
-        </div>
-        <language-switcher/>
-      </template>
-    </pv-toolbar>
-    <pv-drawer v-model:visible="drawer"/>
-  </div>
-  <div class="main-content">
-    <router-view/>
-  </div>
-  <div class="footer">
-    <footer-content/>
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <router-view />
+    </div>
+
+    <!-- Footer solo si no es ruta pública -->
+    <div v-if="!isPublicRoute" class="footer">
+      <footer-content />
+    </div>
   </div>
 </template>
 
@@ -53,19 +65,16 @@ const items = [
 .header {
   position: absolute;
   left: 0;
-  top:0;
-  width:100%;
+  top: 0;
+  width: 100%;
 }
-
 .sidebar {
   position: fixed;
   background-color: #535bf2;
 }
-
 .main-content {
   margin-top: 60px;
 }
-
 .footer {
   position: absolute;
   bottom: 0;
