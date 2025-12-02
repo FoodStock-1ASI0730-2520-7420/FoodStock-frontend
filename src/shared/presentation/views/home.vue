@@ -2,23 +2,24 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { getCurrentUser, logoutUser } from "../../../iam/application/auth.service";
 
 const { t } = useI18n();
 const router = useRouter();
 
 const user = ref(null);
 
-onMounted(() => {
-  const email = localStorage.getItem("userEmail");
-  const data = JSON.parse(localStorage.getItem("tempUser"));
-  if (data?.email === email) {
-    user.value = data;
+onMounted(async () => {
+  const u = await getCurrentUser();
+  if (!u?.id) {
+    await router.push("/login");
+    return;
   }
+  user.value = u;
 });
 
 function logout() {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("userEmail");
+  logoutUser();
   router.push("/login");
 }
 </script>

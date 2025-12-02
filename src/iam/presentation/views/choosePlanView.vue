@@ -7,13 +7,13 @@
       <div class="plan-options">
         <button
             :class="{ active: selectedPlan === 'Estándar' }"
-            @click="selectPlan('Estándar')"
+            @click="selectPlanOption('Estándar')"
         >
           Estándar - $5/mes
         </button>
         <button
             :class="{ active: selectedPlan === 'Premium' }"
-            @click="selectPlan('Premium')"
+            @click="selectPlanOption('Premium')"
         >
           Premium - $25/mes
         </button>
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { selectPlan } from "../../application/auth.service";
+
 export default {
   data() {
     return {
@@ -60,7 +62,7 @@ export default {
     };
   },
   methods: {
-    selectPlan(plan) {
+    selectPlanOption(plan) {
       this.selectedPlan = plan;
     },
     async confirmPayment() {
@@ -74,15 +76,17 @@ export default {
 
       this.loading = true;
 
-      // Simular guardado del plan en el usuario
-      const user = JSON.parse(localStorage.getItem("tempUser"));
-      if (user) {
-        user.plan = this.selectedPlan;
-        localStorage.setItem("tempUser", JSON.stringify(user));
+      // Guardar plan en backend
+      const { ok, message } = await selectPlan(this.selectedPlan);
+      this.loading = false;
+
+      if (!ok) {
+        this.error = message;
+        return;
       }
 
-      this.loading = false;
-      this.$router.push("/login");
+      // Redirigir al home
+      this.$router.push("/home");
     }
   }
 };

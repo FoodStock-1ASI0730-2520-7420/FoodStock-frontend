@@ -79,10 +79,10 @@ export default {
         return;
       }
       this.loading = true;
-      const ok = await registerUser(this.form);
+      const { ok, message } = await registerUser(this.form); // ahora devuelve {ok, user, message}
       this.loading = false;
       if (!ok) {
-        this.error = "No se pudo registrar.";
+        this.error = message;
         return;
       }
       this.$router.push("/choose-plan");
@@ -90,6 +90,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .auth-wrapper {

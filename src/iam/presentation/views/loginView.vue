@@ -27,6 +27,7 @@
 
 <script>
 import { loginUser } from "../../application/auth.service";
+
 export default {
   data() {
     return { form: { email: "", password: "" }, loading: false, error: "" };
@@ -35,7 +36,7 @@ export default {
     async handleLogin() {
       this.error = "";
       this.loading = true;
-      const { ok, message } = await loginUser(this.form);
+      const { ok, message } = await loginUser(this.form); // ahora devuelve {ok, user, message}
       this.loading = false;
       if (!ok) {
         this.error = message;
