@@ -1,5 +1,7 @@
 
 // path: src/reservations/application/reservations.store.js
+// path: src/reservations/application/reservations.store.js
+// path: src/reservations/application/reservations.store.js
 
 import { ReservationsApi } from '../infrastructure/reservations-api.js';
 import { Reservation } from '../domain/model/reservation.entity.js';
