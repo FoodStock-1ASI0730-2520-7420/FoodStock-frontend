@@ -1,21 +1,17 @@
+<!-- path: src/layouts/Layout.vue -->
 <script setup>
 import LanguageSwitcher from "./language-switcher.vue";
 import FooterContent from "./footer-content.vue";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
 const { t } = useI18n();
 const route = useRoute();
 
-const drawer = ref(false);
-const toggleDrawer = () => {
-  drawer.value = !drawer.value;
-};
-
 // Navegación principal
 const items = [
-  { label: "option.home", to: "/home" },
+  { label: "option.profile", to: "/home" },        // Antes: option.home
   { label: "option.inventory", to: "/inventory/dishes" },
   { label: "option.sales", to: "/sales/list" },
   { label: "option.suppliers", to: "/suppliers" },
@@ -23,61 +19,123 @@ const items = [
   { label: "option.reports", to: "/reports" }
 ];
 
-const publicRoutes = ["/login", "/register"];
+
+// Rutas públicas
+const publicRoutes = ["/login", "/register", "/choose-plan"];
 const isPublicRoute = computed(() => publicRoutes.includes(route.path));
 </script>
 
 <template>
-  <div>
-    <div v-if="!isPublicRoute" class="header">
-      <pv-toolbar class="bg-primary">
-        <template #start>
-          <pv-button class="p-button-text" icon="pi pi-bars" @click="toggleDrawer" />
-          <h3>FoodStock</h3>
-        </template>
-        <template #end>
-          <div class="flex-column mr-3">
-            <pv-button v-for="item in items" :key="item.label" as-child v-slot="slotProps">
-              <router-link :to="item.to" :class="slotProps['class']">{{ t(item.label) }}</router-link>
-            </pv-button>
-          </div>
+  <div class="layout">
+    <!-- HEADER -->
+    <header v-if="!isPublicRoute" class="header">
+      <div class="header-inner">
+
+        <!-- IZQUIERDA -->
+        <div class="brand">FoodStock</div>
+
+        <!-- DERECHA (MENÚ + IDIOMAS) -->
+        <div class="right-group">
+          <nav class="nav">
+            <router-link
+                v-for="item in items"
+                :key="item.label"
+                :to="item.to"
+                class="nav-link"
+            >
+              {{ t(item.label) }}
+            </router-link>
+          </nav>
+
           <language-switcher />
-        </template>
-      </pv-toolbar>
-      <pv-drawer v-model:visible="drawer" />
-    </div>
+        </div>
 
-    <!-- Contenido principal -->
-    <div class="main-content">
+      </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <main class="main-content">
       <router-view />
-    </div>
+    </main>
 
-    <!-- Footer solo si no es ruta pública -->
-    <div v-if="!isPublicRoute" class="footer">
+    <!-- FOOTER -->
+    <footer v-if="!isPublicRoute" class="footer">
       <footer-content />
-    </div>
+    </footer>
   </div>
 </template>
 
 <style scoped>
+/* Layout global */
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+/* Header Base */
 .header {
-  position: absolute;
-  left: 0;
-  top: 0;
   width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
 }
-.sidebar {
-  position: fixed;
-  background-color: #535bf2;
+
+.header-inner {
+  max-width: 1450px;
+  margin: 0 auto;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
 }
+
+/* IZQUIERDA */
+.brand {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+/* CONTENEDOR DERECHO */
+.right-group {
+  margin-left: auto; /* 🔥 Empuja TODO hacia la derecha */
+  display: flex;
+  align-items: center;
+  gap: 32px; /* espacio entre menú y idioma */
+}
+
+/* Navegación derecha */
+.nav {
+  display: flex;
+  gap: 26px;
+}
+
+.nav-link {
+  color: #4a4a4a;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 4px 0;
+  transition: color 0.25s ease;
+}
+
+.nav-link:hover {
+  color: #111;
+}
+
+/* Contenido */
 .main-content {
-  margin-top: 60px;
+  flex: 1;
+  padding: 40px 32px 90px;
 }
+
+/* Footer */
 .footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  padding: 16px;
+  text-align: center;
+  color: #666;
 }
 </style>

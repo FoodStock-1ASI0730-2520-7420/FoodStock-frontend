@@ -17,11 +17,11 @@ import salesRoutes from "./sales/presentation/sale-routes.js";
 import reportsRoutes from "./reports/reports.routes.js";
 
 // Reservations
-import ReservationView from "./reservation/presentation/views/ReservationView.vue";
 
 // IAM views
 import LoginView from "./iam/presentation/views/loginView.vue";
 import RegisterView from "./iam/presentation/views/registerView.vue";
+import {reservationRoutes} from "./reservations/presentation/reservation-routes.js";
 
 const routes = [
     // Entrada dinámica: redirige según sesión
@@ -64,10 +64,10 @@ const routes = [
 
     // Reservations (privada)
     {
-        path: "/reservations",
-        name: "reservations",
-        component: ReservationView,
-        meta: { title: "Reservations", requiresAuth: true },
+        path: '/reservations',
+        name: 'reservations',
+        component: RouterView,
+        children: reservationRoutes,
     },
 
     // Sales (privada)
