@@ -21,11 +21,11 @@
   },
 
   "option": {
-    "home": "Inicio",
+    "profile": "Perfil",
     "inventory": "Inventario",
     "sales": "Ventas",
     "suppliers": "Proveedores",
-    "reservation": "Reservaciones",
+    "reservation": "Reservas",
     "reports": "Reportes"
   },
   "items": {

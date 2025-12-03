@@ -11,7 +11,7 @@ const route = useRoute();
 
 // Navegación principal
 const items = [
-  { label: "option.profile", to: "/home" },        // Antes: option.home
+  { label: "option.profile", to: "/home" },
   { label: "option.inventory", to: "/inventory/dishes" },
   { label: "option.sales", to: "/sales/list" },
   { label: "option.suppliers", to: "/suppliers" },

@@ -1,79 +1,19 @@
 {
   "users": [
     {
-      "id": "a5bc",
-      "name": "gonzalo",
-      "email": "example@gmail.com",
-      "password": "1234",
-      "phone": "902871472",
-      "segment": "microempresas",
-      "profilePicture": "Captura de pantalla 2024-11-27 225733.png",
-      "plan": null
-    },
-    {
-      "id": "adc8",
-      "name": "ola",
-      "email": "example@hola.com",
-      "password": "1234",
-      "phone": "902871472",
-      "segment": "emprendedor",
-      "profilePicture": "Captura de pantalla 2024-11-23 215213.png",
-      "plan": null
-    },
-    {
-      "id": "5241",
-      "name": "juan",
-      "email": "juan@example.com",
-      "password": "123",
-      "phone": "123456789",
+      "id": "2e62",
+      "name": "jean",
+      "email": "jean@gmail.com",
+      "password": "123456789",
+      "phone": "987465456",
       "segment": "emprendedor",
       "profilePicture": null,
-      "plan": null
-    },
-    {
-      "id": "e320",
-      "name": "gonzalo",
-      "email": "gonzalo@ola.com",
-      "password": "1234",
-      "phone": "9089981091",
-      "segment": "microempresas",
-      "profilePicture": null,
-      "plan": null
-    },
-    {
-      "id": "1225",
-      "name": "ximena",
-      "email": "xime@xime.com",
-      "password": "123",
-      "phone": "123456789",
-      "segment": "microempresas",
-      "profilePicture": null,
-      "plan": null
-    },
-    {
-      "id": "833d",
-      "name": "ximena",
-      "email": "ximena@ximena.com",
-      "password": "1234",
-      "phone": "902871472",
-      "segment": "microempresas",
-      "profilePicture": null,
-      "plan": null
-    },
-    {
-      "name": "nombre",
-      "email": "nombre@gmail.com",
-      "password": "12345",
-      "phone": "123456789",
-      "segment": "microempresas",
-      "profilePicture": null,
-      "plan": null,
-      "id": "n6xcTl_"
+      "plan": "Estándar-Mensual"
     }
   ],
   "sales": [
     {
-      "id": 2,
+      "id": "2",
       "saleType": "delivery",
       "paymentMethod": "cash",
       "waiter": "Mesero",
@@ -90,7 +30,7 @@
       "expirationDate": "2025-12-15",
       "category": "Verdura",
       "deleted": false,
-      "id": 1
+      "id": "1"
     }
   ],
   "reservations": []
