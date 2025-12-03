@@ -23,14 +23,12 @@ const items = [
   { label: "option.reports", to: "/reports" }
 ];
 
-// Rutas públicas (IAM)
-const publicRoutes = ["/login", "/register", "/choose-plan"];
+const publicRoutes = ["/login", "/register"];
 const isPublicRoute = computed(() => publicRoutes.includes(route.path));
 </script>
 
 <template>
   <div>
-    <!-- Header solo si no es ruta pública -->
     <div v-if="!isPublicRoute" class="header">
       <pv-toolbar class="bg-primary">
         <template #start>

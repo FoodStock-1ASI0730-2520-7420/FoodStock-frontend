@@ -22,7 +22,6 @@ import ReservationView from "./reservation/presentation/views/ReservationView.vu
 // IAM views
 import LoginView from "./iam/presentation/views/loginView.vue";
 import RegisterView from "./iam/presentation/views/registerView.vue";
-import ChoosePlanView from "./iam/presentation/views/choosePlanView.vue";
 
 const routes = [
     // Entrada dinámica: redirige según sesión
@@ -39,7 +38,6 @@ const routes = [
     // IAM públicas
     { path: "/login", name: "Login", component: LoginView, meta: { title: "Login" } },
     { path: "/register", name: "Register", component: RegisterView, meta: { title: "Registro" } },
-    { path: "/choose-plan", name: "ChoosePlan", component: ChoosePlanView, meta: { title: "Elegir Plan" } },
 
     // Home (privada)
     { path: "/home", name: "home", component: Home, meta: { title: "Home", requiresAuth: true } },

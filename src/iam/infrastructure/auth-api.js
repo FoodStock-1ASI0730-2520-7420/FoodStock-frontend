@@ -1,5 +1,19 @@
 // src/iam/infrastructure/auth-api.js
-// Este archivo se conectará al backend más adelante
-export async function sendToBackend(user) {
-    console.log('Simulación de envío al backend:', user);
+const API = "http://localhost:3000";
+
+export async function sendToBackend(endpoint, method = "POST", body = {}) {
+    try {
+        const res = await fetch(`${API}/${endpoint}`, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        });
+        if (!res.ok) {
+            return { ok: false, message: `Error en ${method} ${endpoint}` };
+        }
+        const data = await res.json();
+        return { ok: true, data };
+    } catch (err) {
+        return { ok: false, message: "Error de conexión con el servidor." };
+    }
 }

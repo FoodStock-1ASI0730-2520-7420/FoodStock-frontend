@@ -1,18 +1,24 @@
-// src/iam/application/auth.service.js
+import { sendToBackend } from "../infrastructure/auth-api";
+
 const API = "http://localhost:3000";
 
-// Registro de usuario → guarda en db.json
+// Registro de usuario → guarda en db.json con plan incluido
 export async function registerUser(form) {
     try {
         const res = await fetch(`${API}/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form)
+            body: JSON.stringify(form),
         });
         if (!res.ok) {
             return { ok: false, message: "No se pudo registrar." };
         }
         const user = await res.json();
+
+        // Guardamos sesión simulada
+        localStorage.setItem("authToken", "fake-token");
+        localStorage.setItem("userId", user.id);
+
         return { ok: true, user };
     } catch (err) {
         return { ok: false, message: "Error de conexión con el servidor." };
@@ -38,7 +44,7 @@ export async function loginUser({ email, password }) {
     }
 }
 
-// Obtener usuario actual → lee de db.json
+// Obtener usuario actual
 export async function getCurrentUser() {
     const id = localStorage.getItem("userId");
     if (!id) return null;
@@ -48,24 +54,6 @@ export async function getCurrentUser() {
         return await res.json();
     } catch (err) {
         return null;
-    }
-}
-
-// Seleccionar plan → actualiza en db.json
-export async function selectPlan(plan) {
-    const id = localStorage.getItem("userId");
-    if (!id) return { ok: false, message: "No autenticado." };
-
-    try {
-        const res = await fetch(`${API}/users/${id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ plan })
-        });
-        if (!res.ok) return { ok: false, message: "No se pudo actualizar el plan." };
-        return { ok: true };
-    } catch (err) {
-        return { ok: false, message: "Error de conexión con el servidor." };
     }
 }
 
@@ -83,7 +71,7 @@ export async function updateProfile({ phone, password, profilePicture }) {
         const res = await fetch(`${API}/users/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
         });
         if (!res.ok) return { ok: false, message: "No se pudo actualizar el perfil." };
         return { ok: true };

@@ -7,6 +7,6 @@ export class User {
         this.phone = phone;
         this.segment = segment;
         this.profilePicture = profilePicture || null;
-        this.plan = plan || null;
+        this.plan = plan; // obligatorio en registro
     }
 }
