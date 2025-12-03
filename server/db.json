@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "users": [
     {
@@ -117,3 +118,9 @@
   "products": [],
   "reservations": []
 }
+=======
+{
+  "tables": [],
+  "reservations": []
+}
+>>>>>>> feature/Reservation
