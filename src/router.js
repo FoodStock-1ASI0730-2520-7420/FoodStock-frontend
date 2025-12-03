@@ -17,36 +17,19 @@ import salesRoutes from "./sales/presentation/sale-routes.js";
 import reportsRoutes from "./reports/reports.routes.js";
 
 // Reservations
-
-// IAM views
-import LoginView from "./iam/presentation/views/loginView.vue";
-import RegisterView from "./iam/presentation/views/registerView.vue";
-import {reservationRoutes} from "./reservations/presentation/reservation-routes.js";
+import { reservationRoutes } from "./reservations/presentation/reservation-routes.js";
 
 const routes = [
-    // Entrada dinámica: redirige según sesión
-    {
-        path: "/",
-        name: "RootRedirect",
-        component: { render: () => null },
-        beforeEnter: (to, from, next) => {
-            const token = localStorage.getItem("authToken");
-            next(token ? "/home" : "/login");
-        },
-    },
+    // ✅ Redirección desde raíz
+    { path: "/", redirect: "/home" },
 
-    // IAM públicas
-    { path: "/login", name: "Login", component: LoginView, meta: { title: "Login" } },
-    { path: "/register", name: "Register", component: RegisterView, meta: { title: "Registro" } },
+    // Home
+    { path: "/home", name: "home", component: Home, meta: { title: "Home" } },
 
-    // Home (privada)
-    { path: "/home", name: "home", component: Home, meta: { title: "Home", requiresAuth: true } },
-
-    // Inventory (privada)
+    // Inventory
     {
         path: "/inventory",
         component: InventoryView,
-        meta: { requiresAuth: true },
         children: [
             { path: "dishes", name: "InventoryDishes", component: DishesView },
             { path: "products", name: "InventoryProducts", component: ProductsView },
@@ -54,35 +37,33 @@ const routes = [
         ],
     },
 
-    // Suppliers (privada)
+    // Suppliers
     {
         path: "/suppliers",
         name: "SuppliersManagement",
         component: SuppliersView,
-        meta: { title: "Manage Suppliers", requiresAuth: true },
+        meta: { title: "Manage Suppliers" },
     },
 
-    // Reservations (privada)
+    // Reservations
     {
-        path: '/reservations',
-        name: 'reservations',
+        path: "/reservations",
+        name: "reservations",
         component: RouterView,
         children: reservationRoutes,
     },
 
-    // Sales (privada)
+    // Sales
     {
         path: "/sales",
         name: "sales",
-        meta: { requiresAuth: true },
         children: salesRoutes,
     },
 
-    // Reports (privada)
+    // Reports
     {
         path: "/reports",
         component: RouterView,
-        meta: { requiresAuth: true },
         children: reportsRoutes,
     },
 
@@ -100,19 +81,12 @@ export const router = createRouter({
     routes,
 });
 
+// ✅ Guard simplificado: solo título dinámico
 router.beforeEach((to, from, next) => {
     console.log(`Navigating from ${from.name} to ${to.name}`);
 
-    // Título dinámico
     const baseTitle = "FoodStock";
     document.title = `${baseTitle} - ${to.meta.title || ""}`;
-
-    // Autenticación
-    const token = localStorage.getItem("authToken");
-    const publicPages = ["/login", "/register", "/choose-plan"];
-
-    if (to.meta?.requiresAuth && !token) return next("/login");
-    if (token && publicPages.includes(to.path)) return next("/home");
 
     next();
 });
