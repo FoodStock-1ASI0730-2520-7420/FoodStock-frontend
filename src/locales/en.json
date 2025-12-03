@@ -21,7 +21,7 @@
   },
 
   "option": {
-    "profile": "Profile",
+    "home": "Profile",
     "inventory": "Inventory",
     "sales": "Sales",
     "suppliers": "Suppliers",
