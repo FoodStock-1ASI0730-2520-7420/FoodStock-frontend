@@ -2,33 +2,25 @@
 <script setup>
 import LanguageSwitcher from "./language-switcher.vue";
 import FooterContent from "./footer-content.vue";
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
 
 const { t } = useI18n();
-const route = useRoute();
 
 // Navegación principal
 const items = [
-  { label: "option.profile", to: "/home" },
+  { label: "option.home", to: "/home" },
   { label: "option.inventory", to: "/inventory/dishes" },
   { label: "option.sales", to: "/sales/list" },
   { label: "option.suppliers", to: "/suppliers" },
   { label: "option.reservation", to: "/reservations" },
   { label: "option.reports", to: "/reports" }
 ];
-
-
-// Rutas públicas
-const publicRoutes = ["/login", "/register", "/choose-plan"];
-const isPublicRoute = computed(() => publicRoutes.includes(route.path));
 </script>
 
 <template>
   <div class="layout">
     <!-- HEADER -->
-    <header v-if="!isPublicRoute" class="header">
+    <header class="header">
       <div class="header-inner">
 
         <!-- IZQUIERDA -->
@@ -59,7 +51,7 @@ const isPublicRoute = computed(() => publicRoutes.includes(route.path));
     </main>
 
     <!-- FOOTER -->
-    <footer v-if="!isPublicRoute" class="footer">
+    <footer class="footer">
       <footer-content />
     </footer>
   </div>
@@ -99,10 +91,10 @@ const isPublicRoute = computed(() => publicRoutes.includes(route.path));
 
 /* CONTENEDOR DERECHO */
 .right-group {
-  margin-left: auto; /* 🔥 Empuja TODO hacia la derecha */
+  margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 32px; /* espacio entre menú y idioma */
+  gap: 32px;
 }
 
 /* Navegación derecha */
