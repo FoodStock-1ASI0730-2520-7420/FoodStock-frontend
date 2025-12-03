@@ -17,8 +17,14 @@ onMounted(async() => {
   if (!salesLoaded) fetchSales();
 });
 
-const sale = computed(() => sales.find(sale => sale.id === saleId));
-const saleItems = computed(() => sale.value ? sale.value.saleItems : []);
+const sale = computed(() =>{
+    if (!salesLoaded) return null;
+    return sales.find(sale => Number(sale.id) === Number(saleId)) || null;});
+const saleItems = computed(() =>{
+  if(!salesLoaded) return [];
+  if(!sale.value) return [];
+  return sale.value.saleItems || [];
+});
 </script>
 
 <template>
