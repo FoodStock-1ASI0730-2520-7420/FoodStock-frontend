@@ -1,19 +1,19 @@
-import { BaseApi2 } from "../../shared/infrastructure/base-api-2.js";
-import { BaseEndpoint2 } from "../../shared/infrastructure/base-endpoint-2.js";
+import { BaseApi } from "../../shared/infrastructure/base-api.js";
+import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 import { ProductAssembler } from './product.assembler.js';
 import { DishAssembler } from './dish.assembler.js';
 
 const productsEndpointPath = import.meta.env.VITE_PRODUCTS_ENDPOINT_PATH || 'products';
 const dishesEndpointPath = import.meta.env.VITE_DISHES_ENDPOINT_PATH || 'dishes';
 
-export class InventoryApi extends BaseApi2 {
+export class InventoryApi extends BaseApi {
     #productsEndpoint;
     #dishesEndpoint;
 
     constructor() {
         super();
-        this.#productsEndpoint = new BaseEndpoint2(this, productsEndpointPath);
-        this.#dishesEndpoint = new BaseEndpoint2(this, dishesEndpointPath);
+        this.#productsEndpoint = new BaseEndpoint(this, productsEndpointPath);
+        this.#dishesEndpoint = new BaseEndpoint(this, dishesEndpointPath);
     }
 
     // Products

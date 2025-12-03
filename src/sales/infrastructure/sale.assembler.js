@@ -10,8 +10,9 @@ export class SaleAssembler {
             creationDate: resource.creationDate,
             creationTime: resource.creationTime,
             waiter: resource.waiter,
-            total: resource.total
-        })
+            total: resource.total,
+            saleItems: (resource.saleItems || []).map(item=> new SaleItem(item))
+        });
     }
 
     static toEntitiesFromResponse(response) {
@@ -19,7 +20,7 @@ export class SaleAssembler {
             console.error(`${response.status}, ${response.statusText}`);
             return [];
         }
-        let resources = response.data instanceof Array ? response.data : response.data['sales'];
+        let resources = Array.isArray(response.data) ? response.data : response.data['sales'];
 
         return resources.map(resource => this.toEntityFromResource(resource));
     }

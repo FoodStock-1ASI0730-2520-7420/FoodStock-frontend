@@ -9,7 +9,7 @@ const { t } = useI18n();
 const router = useRouter();
 const confirm = useConfirm();
 const store = useSalesStore();
-const { sales, salesLoaded, saleItemsLoaded, errors, fetchSaleItems, fetchSales, deleteSale} = store;
+const { sales, salesLoaded, errors, fetchSales, deleteSale} = store;
 
 onMounted(() => {
   if (!salesLoaded) fetchSales();

@@ -11,48 +11,33 @@ const route = useRoute();
 const confirm = useConfirm();
 const saleId = Number(route.params.id);
 const store = useSalesStore();
-const { saleItems, sales, saleItemsLoaded, salesLoaded, errors, fetchSaleItems, fetchSales, deleteSale} = store;
+const {sales, salesLoaded, errors, fetchSales} = store;
 
-onMounted(() => {
+onMounted(async() => {
   if (!salesLoaded) fetchSales();
-  if (!saleItemsLoaded) fetchSaleItems(saleId);
 });
 
-const filteredSaleItems = computed(() =>
-    saleItems.filter(saleItem => saleItem.saleId === saleId));
-
-const navigateToEdit = (id) => {
-  console.log(id);
-  router.push({ name: 'sale-edit', params: { id } });
-};
-
-const confirmDelete = (sale) => {
-  confirm.require({
-    message: t('sales.confirm-delete'),
-    header: t('sales.delete-header'),
-    icon: 'pi pi-exclamation-triangle',
-    accept: () => { deleteSale(sale); },
-  });
-};
+const sale = computed(() => sales.find(sale => sale.id === saleId));
+const saleItems = computed(() => sale.value ? sale.value.saleItems : []);
 </script>
 
 <template>
   <div class="p-4">
     <h1>{{ t('saleItems.title') }}</h1>
     <pv-data-table
-        :value="filteredSaleItems"
-        :loading="!saleItemsLoaded"
+        :value="saleItems"
+        :loading="!salesLoaded"
         striped-rows
         table-style="min-width: 50rem"
         paginator
         :rows="6"
         :rows-per-page-options="[5, 10, 20]"
     >
-      <pv-column field="id" header="ID" sortable />
+      <pv-column field="dishId" header="ID" sortable />
       <pv-column field="name" :header="t('saleItems.name')" />
       <pv-column field="priceUnit" :header="t('saleItems.priceUnit')" sortable/>
       <pv-column field="quantity" :header="t('saleItems.quantity')" sortable />
-      <pv-column field="subtotal" :header="t('saleItems.subtotal')" sortable />
+      <pv-column field="subtotal" :header="t('saleItems.subtotal')" :body="item => item.priceUnit * item.quantity" sortable />
     </pv-data-table>
     <div v-if="errors.length" class="text-red-500 mt-3">
       {{ t('errors.occurred') }}: {{ errors.map(e => e.message).join(', ') }}

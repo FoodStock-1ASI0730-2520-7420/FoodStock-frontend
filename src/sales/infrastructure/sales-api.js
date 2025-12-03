@@ -1,17 +1,17 @@
-import {BaseApi3} from "../../shared/infrastructure/base-api-3.js";
-import {BaseEndpoint3} from "../../shared/infrastructure/base-endpoint-3.js";
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
 const salesEndpointPath    = import.meta.env.VITE_SALES_ENDPOINT_PATH;
 const saleItemsEndpointPath    = import.meta.env.VITE_SALEITEMS_ENDPOINT_PATH;
 
-export class SalesApi extends BaseApi3 {
+export class SalesApi extends BaseApi {
     #salesEndpoint;
-    #saleItemsEndpoint;
+    //#saleItemsEndpoint;
 
     constructor() {
         super();
-        this.#salesEndpoint = new BaseEndpoint3(this, salesEndpointPath);
-        this.#saleItemsEndpoint = new BaseEndpoint3(this, saleItemsEndpointPath);
+        this.#salesEndpoint = new BaseEndpoint(this, salesEndpointPath);
+        //this.#saleItemsEndpoint = new BaseEndpoint(this, saleItemsEndpointPath);
     }
 
     getSales() {
@@ -38,22 +38,22 @@ export class SalesApi extends BaseApi3 {
         return this.#salesEndpoint.getById(saleId).then(sale => sale.saleItems);
     }
 
-    getSaleItemBySaleId(id) {
-        return this.#saleItemsEndpoint.getAll({id});
-    }
+    //getSaleItemBySaleId(id) {
+        //return this.#saleItemsEndpoint.getAll({id});
+    //}
 
-    createSaleItem(resource) {
-        return this.#saleItemsEndpoint.create(resource);
-    }
+    //createSaleItem(resource) {
+        //return this.#saleItemsEndpoint.create(resource);
+    //}
 
-    updateSaleItem(resource) {
-        return this.#saleItemsEndpoint.update(resource.id, resource);
-    }
+    //updateSaleItem(resource) {
+        //return this.#saleItemsEndpoint.update(resource.id, resource);
+    //}
 
-    deleteSaleItem(id) {
-        return this.#saleItemsEndpoint.delete(id);
-    }
-     getAllSaleItems() {
-        return this.#saleItemsEndpoint.getAll();
-    }
+    //deleteSaleItem(id) {
+        //return this.#saleItemsEndpoint.delete(id);
+    //}
+    //getAllSaleItems() {
+        //return this.#saleItemsEndpoint.getAll();
+    //}
 }

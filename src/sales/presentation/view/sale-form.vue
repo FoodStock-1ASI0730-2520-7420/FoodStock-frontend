@@ -14,7 +14,7 @@ const router = useRouter();
 const inventoryApi = new InventoryApi();
 const saleId = Number(route.params.id);
 const store = useSalesStore();
-const {errors, sales, saleItems, salesLoaded, saleItemsLoaded, addSale, updateSale, fetchSales} = store;
+const {errors, sales, salesLoaded, addSale, updateSale, fetchSales} = store;
 
 const saleType = [
   { label: "In-Person", value: 'in-person' },
@@ -32,7 +32,7 @@ const isEdit = computed(() => !!route.params.id);
 const items = ref([]);
 const itemsLoaded = ref(false);
 
-const saleItemForm = ref({itemId: null, quantity: 1});
+const saleItemForm = ref({dishId: null, quantity: 1});
 
 onMounted(async() => {
   if (!salesLoaded) fetchSales();
@@ -40,27 +40,9 @@ onMounted(async() => {
     const sale = getSaleById(route.params.id);
     if (sale) {
       Object.assign(form.value, sale);
-
-      const assignItems = () => {
-        form.value.saleItems = saleItems.filter(saleItem => saleItem.saleId === saleId);
-      };
-
-      if(!saleItemsLoaded){
-        const unwatch = watch(
-            () => saleItemsLoaded,
-            (loaded) => {
-              if(loaded){
-                assignItems();
-                unwatch();
-              }
-            }
-        )
-      } else{
-        assignItems();
-      }
     } else router.push({name: 'sales-list'});
   }
-  items.value = await inventoryApi.getItems();
+  items.value = await inventoryApi.getDishes();
   itemsLoaded.value = true;
 });
 
@@ -76,53 +58,37 @@ function getSaleById(id) {
 }
 
 const saveSale = async () => {
-  const saleItemsData = form.value.saleItems.map(item => {
-    const saleItem = new SaleItem(item)
-    return {
-      name: saleItem.name,
-      priceUnit: saleItem.priceUnit,
-      quantity: saleItem.quantity,
-      subtotal: saleItem.subtotal};
-  })
-  const sale = new Sale({
+  const saleItemsData = form.value.saleItems.map(item => ({
+    dishId: item.dishId,
+    name: item.name,
+    priceUnit: item.priceUnit,
+    quantity: item.quantity
+  }));
+  const saleToSave = {
     id: isEdit.value ? route.params.id : null,
     saleType: form.value.saleType,
     paymentMethod: form.value.paymentMethod,
-    waiter: form.value.waiter
-  });
-  const { saleItems, ...saleToSave} = { ...sale};
-  saleToSave.total = saleItemsData.reduce((sum, item) => sum + item.subtotal, 0);
-
-  let saleId;
-
+    waiter: form.value.waiter,
+    saleItems: saleItemsData
+  };
   if (isEdit.value) {
-    await store.updateSale(saleToSave);
-    saleId = saleToSave.id;
+    await updateSale(saleToSave);
   } else {
-    console.log('venta a guardar:', saleToSave);
-    const saleResponse = await addSale(saleToSave);
-    saleId = saleResponse.data.id;
-  }
-
-  for (const item of saleItemsData) {
-    await store.addSaleItem({
-      ...item,
-      saleId
-    });
+    await addSale(saleToSave);
   }
   navigateBack();
-};
+  };
 
 const editingIndex = ref(null);
 
 const selectedItem = computed(() =>
-    items.value.find(item => item.id == saleItemForm.value.itemId));
+    items.value.find(item => item.id == saleItemForm.value.dishId));
 
 const addSaleItem = () => {
   if(!selectedItem.value) return;
 
   const saleItemData = {
-    itemId: selectedItem.value.id,
+    dishId: selectedItem.value.id,
     name: selectedItem.value.name,
     priceUnit: selectedItem.value.price,
     quantity: saleItemForm.value.quantity
@@ -133,7 +99,7 @@ const addSaleItem = () => {
   }else{
     form.value.saleItems.push(saleItemData)
   }
-  saleItemForm.value = {itemId: null, quantity: 1};
+  saleItemForm.value = {dishId: null, quantity: 1};
 }
 
 const editSaleItem = (index) => {
@@ -189,7 +155,7 @@ const navigateBack = () => {
             <label for="name">{{ t('sale.name') }}</label>
             <pv-select
                 id="item"
-                v-model="saleItemForm.itemId"
+                v-model="saleItemForm.dishId"
                 :options="items"
                 optionLabel="name"
                 optionValue="id"

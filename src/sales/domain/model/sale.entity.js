@@ -13,6 +13,6 @@ export class Sale {
     }
 
     get totalCount() {
-        return this.saleItems.reduce((sum, saleItem) => sum + saleItem.subtotal, 0);
+        return this.saleItems.reduce((sum, saleItem) => sum + saleItem.priceUnit * saleItem.quantity,0);
     }
 }
