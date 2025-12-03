@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { createRouter, createWebHistory, RouterView } from "vue-router";
 
 // Shared views
@@ -18,20 +17,14 @@ import salesRoutes from "./sales/presentation/sale-routes.js";
 import reportsRoutes from "./reports/reports.routes.js";
 
 // Reservations
-import ReservationView from "./reservation/presentation/views/ReservationView.vue";
-=======
-import {createRouter, createWebHistory, RouterView} from "vue-router";
-import Home from "./shared/presentation/views/home.vue";
-import {reservationRoutes} from "./reservations/presentation/reservation-routes.js";
->>>>>>> feature/Reservation
 
 // IAM views
 import LoginView from "./iam/presentation/views/loginView.vue";
 import RegisterView from "./iam/presentation/views/registerView.vue";
 import ChoosePlanView from "./iam/presentation/views/choosePlanView.vue";
+import {reservationRoutes} from "./reservations/presentation/reservation-routes.js";
 
 const routes = [
-<<<<<<< HEAD
     // Entrada dinámica: redirige según sesión
     {
         path: "/",
@@ -73,10 +66,10 @@ const routes = [
 
     // Reservations (privada)
     {
-        path: "/reservations",
-        name: "reservations",
-        component: ReservationView,
-        meta: { title: "Reservations", requiresAuth: true },
+        path: '/reservations',
+        name: 'reservations',
+        component: RouterView, // <- esto permite que se muestren las rutas hijas del módulo
+        children: reservationRoutes,
     },
 
     // Sales (privada)
@@ -102,19 +95,6 @@ const routes = [
         component: pageNotFound,
         meta: { title: "Page Not Found" },
     },
-=======
-    { path: '/home',            name: 'home',       component: Home,        meta: { title: 'Home' } },
-    { path: '/',                redirect: '/home' },
-    { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { title: 'Page Not Found' } }
-
-   {
-        path: '/reservations',
-        name: 'reservations',
-        component: RouterView, 
-        children: reservationRoutes,
-    },
-    
->>>>>>> feature/Reservation
 ];
 
 export const router = createRouter({
@@ -131,7 +111,7 @@ router.beforeEach((to, from, next) => {
 
     // Autenticación
     const token = localStorage.getItem("authToken");
-    const publicPages = ["/login", "/register"];
+    const publicPages = ["/login", "/register", "/choose-plan"];
 
     if (to.meta?.requiresAuth && !token) return next("/login");
     if (token && publicPages.includes(to.path)) return next("/home");
