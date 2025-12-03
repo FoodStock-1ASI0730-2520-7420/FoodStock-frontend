@@ -1,36 +1,60 @@
 // path: src/reservations/infrastructure/tables-api.js
-import { toEntity as tableFromDto, toDTO as tableToDto } from "./table.assembler.js";
+import { BaseApi } from "../../shared/infrastructure/base-api.js";
+import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 
-const base =
-    import.meta.env.VITE_TABLES_ENDPOINT_PATH ||
-    "http://localhost:3000/tables";
+const RAW_PATH = import.meta.env.VITE_TABLES_ENDPOINT_PATH || "/tables";
+const PATH = RAW_PATH?.startsWith("/") ? RAW_PATH : `/${RAW_PATH || ""}`;
 
-async function http(url, options = {}) {
-    const res = await fetch(url, {
-        headers: { "Content-Type": "application/json" },
-        ...options
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.status === 204 ? null : res.json();
+// helpers locales (sin crear archivos nuevos)
+function unwrapList(payload) {
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.data)) return payload.data;
+    if (Array.isArray(payload?.items)) return payload.items;
+    if (Array.isArray(payload?.results)) return payload.results;
+    return [];
+}
+function normalizeTable(t) {
+    return {
+        id: Number(t.id ?? t.Id ?? 0),
+        number: Number(t.number ?? t.Number ?? 0),
+        capacity: Number(t.capacity ?? t.Capacity ?? 0),
+    };
 }
 
-export const TablesApi = {
-    async list() {
-        const data = await http(base);
-        return data.map(tableFromDto);
-    },
-
-    async create(entity) {
-        const payload = tableToDto(entity);
-        const data = await http(base, {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-        return tableFromDto(data);
-    },
-
-    async remove(id) {
-        // id llega como string, la ruta REST lo maneja bien
-        await http(`${base}/${String(id)}`, { method: "DELETE" });
+export class TablesApiService extends BaseApi {
+    #endpoint;
+    constructor() {
+        super();
+        this.#endpoint = new BaseEndpoint(this, PATH);
     }
+    async getTables() {
+        const res = await this.#endpoint.getAll();
+        return unwrapList(res).map(normalizeTable);
+    }
+    getTableById(id) {
+        return this.#endpoint.getById(id).then(normalizeTable);
+    }
+    createTable(resource) {
+        return this.#endpoint.create(resource).then(normalizeTable);
+    }
+    updateTable(resource) {
+        return this.#endpoint.update(resource.id, resource).then(normalizeTable);
+    }
+    deleteTable(id) {
+        return this.#endpoint.delete(id);
+    }
+}
+
+const tablesService = new TablesApiService();
+
+export const TablesApi = {
+    list() {
+        return tablesService.getTables(); // SIEMPRE Array normalizado
+    },
+    create(entity) {
+        return tablesService.createTable(entity);
+    },
+    remove(id) {
+        return tablesService.deleteTable(id);
+    },
 };
