@@ -1,1 +1,106 @@
-{}
+{
+  "inventory": {
+    "title": "Inventory Management",
+    "viewItems": "View Items",
+    "viewDishes": "View Dishes",
+    "viewProducts": "View Products"
+  },
+  "dishes": {
+    "title": "Finished Dishes",
+    "total": "Total Dishes",
+    "add": "Add Dish",
+    "edit": "Edit Dish",
+    "name": "Name",
+    "ingredients": "Ingredients",
+    "noDishes": "No dishes found.",
+    "addDish": "Add Dish",
+    "actions": "Actions",
+    "delete": "Delete",
+    "loading": "Loading dishes...",
+    "errorLoading": "Error loading dishes"
+  },
+
+  "option": {
+    "home": "Home",
+    "sales": "Sales",
+    "suppliers": "Suppliers",
+    "reservation": "Reservation",
+    "reports": "Reports",
+    "inventory": "Inventory"
+  },
+  "items": {
+    "title": "Finished Dishes / Items Management",
+    "total": "Total Items",
+    "add": "Add New Item",
+    "edit": "Edit Finished Dish",
+    "name": "Name",
+    "price": "Price",
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "addItem": "Add Item",
+    "actions": "Actions",
+    "delete": "Delete",
+    "noItems": "No items found.",
+    "loading": "Loading items...",
+    "errorLoading": "Error loading items"
+  },
+  "products": {
+    "title": "Product List",
+    "add": "Add Product",
+    "edit": "Edit Product",
+    "save": "Save Changes",
+    "name": "Name",
+    "unitPrice": "Unit Price",
+    "quantity": "Quantity",
+    "expirationDate": "Expiration Date",
+    "category": "Category",
+    "actions": "Actions",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "categories": {
+    "fruit": "Fruit",
+    "vegetable": "Vegetable",
+    "spices": "Spices",
+    "proteins": "Proteins",
+    "dairy": "Dairy"
+  },
+  "sale":{
+    "new-title": "Create New Sale",
+    "edit-title": "Edit Sale",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saleType": "Type of sale",
+    "paymentMethod": "Payment method",
+    "waiter": "Waiter",
+    "addItem": "Add a Item",
+    "name": "Name",
+    "price": "Price",
+    "quantity": "Quantity",
+    "add": "Add",
+    "itemList": "List of items",
+    "selectTypeSale": "Select a sale type",
+    "selectPaymentMethod": "Select a payment method",
+    "selectItem": "Select an item",
+    "total": "Total"
+  },
+  "sales": {
+    "title": "Sales",
+    "saleType":"Type of sale",
+    "paymentMethod": "Payment method",
+    "totalFinal": "Total",
+    "date": "Date",
+    "time": "Time",
+    "actions": "Actions",
+    "delete-header": "Delete",
+    "confirm-delete": "Do you want to delete this sale?",
+    "new": "New"
+  },
+  "saleItems": {
+    "title": "List of items sold",
+    "name":"Name",
+    "priceUnit": "Unit price",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal"
+  }
+}
